@@ -18,7 +18,7 @@ from queue import Queue, Empty
 from typing import Optional
 
 # ====================== 配置 & 日志 ======================
-DDDEBUG = os.environ.get('DDDEBUG', 'false').lower() in ('true', '1', 'yes')
+DDDEBUG = os.environ.get('DDDEBUG', 'true').lower() in ('true', '1', 'yes')
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG if DDDEBUG else logging.INFO)
