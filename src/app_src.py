@@ -62,7 +62,7 @@ npmPath = os.path.join(FILE_PATH, 'npm')
 phpPath = os.path.join(FILE_PATH, 'php')
 lockFile = os.path.join(FILE_PATH, 'service.lock')  # 永久保留
 
-log.info(f"Configuration loaded | DDDEBUG={'ON' if DDDEBUG else 'OFF'}")
+log.debug(f"Configuration loaded | DDDEBUG={'ON' if DDDEBUG else 'OFF'}")
 log.debug(f"FILE_PATH={FILE_PATH} | lockFile={lockFile}")
 
 
