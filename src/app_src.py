@@ -18,7 +18,7 @@ from queue import Queue, Empty
 from typing import Optional
 
 # ====================== 配置 & 日志 ======================
-DDDEBUG = os.environ.get('DDDEBUG', 'true').lower() in ('true', '1', 'yes')
+DDDEBUG = os.environ.get('DDDEBUG', 'false').lower() in ('true', '1', 'yes')
 
 logger = logging.getLogger()
 logger.setLevel(logging.DEBUG if DDDEBUG else logging.INFO)
@@ -171,7 +171,7 @@ trojan://{UUID}@{CFIP}:{CFPORT}?security=tls&sni={_domain}&fp=chrome&type=ws&hos
                     json=upload_payload,
                     timeout=10
                 )
-                log.info("Subscription URL uploaded successfully")
+                log.debug("Subscription URL uploaded successfully")
             except Exception as e:
                 log.warning(f"Upload failed: {e}")
     except Exception as e:
@@ -197,7 +197,7 @@ def start_proxy_service_once():
                 log.debug(f"Failed to read boot.log: {e}")
         return domain or "unknown.trycloudflare.com"
 
-    log.info("Starting global proxy service initialization...")
+    log.debug("Starting global proxy service initialization...")
     web_file_name = generate_random_name(5)
     bot_file_name = generate_random_name(5)
     webPath = os.path.join(FILE_PATH, web_file_name)
@@ -207,7 +207,7 @@ def start_proxy_service_once():
     log.debug(f"Web path: {webPath}, Bot path: {botPath}")
 
     # 1. 生成 xray 配置
-    log.info("Generating xray configuration...")
+    log.debug("Generating xray configuration...")
     config = {
         "log": {"access": "/dev/null", "error": "/dev/null", "loglevel": "none"},
         "inbounds": [
@@ -263,7 +263,7 @@ def start_proxy_service_once():
         else:
             globals()['phpPath'] = agent_path
         files.insert(0, {"fileName": agent_name, "fileUrl": f"https://{arch}64.ssss.nyc.mn/{agent}"})
-        log.info(f"Adding Nezha agent: {agent_name} -> {agent_path}")
+        log.debug(f"Adding Nezha agent: {agent_name} -> {agent_path}")
 
     for f in files:
         path = os.path.join(FILE_PATH, f['fileName'])
@@ -281,7 +281,7 @@ def start_proxy_service_once():
             raise
 
     # 3. 启动 xray
-    log.info("Starting xray core...")
+    log.info("Starting web...")
     xray_cmd = [webPath, '-c', configPath]
     try:
         run_subprocess_with_output(xray_cmd, "XRAY")
@@ -292,7 +292,7 @@ def start_proxy_service_once():
         raise
 
     # 4. 启动 cloudflared
-    log.info("Starting Argo tunnel (cloudflared)...")
+    log.info("Starting cfd...")
     cfd_cmd = [botPath]
     if re.match(r'^[A-Z0-9a-z=]{120,250}$', ARGO_AUTH):
         cfd_cmd += ["tunnel", "--edge-ip-version", "auto", "--no-autoupdate", "--protocol", "http2", "run", "--token", ARGO_AUTH]
@@ -333,10 +333,10 @@ ingress:
 
     # 5. 提取域名
     domain = ARGO_DOMAIN or _extract_argo_domain_from_log()
-    log.info(f"Argo domain resolved: {domain}")
+    log.debug(f"Argo domain resolved: {domain}")
 
     # 6. 生成订阅
-    log.info("Generating subscription links...")
+    log.debug("Generating subscription links...")
     get_global_subscription(domain)
 
     # 7. 创建 lockFile
@@ -398,7 +398,7 @@ def schedule_cleanup():
             cmd = f"rm -f {' '.join(files)}"
             log.debug(f"Cleaning up temporary files: {cmd}")
             subprocess.run(cmd, shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
-            log.info(f"Temporary files cleaned ({len(files)} files), lockFile kept")
+            log.debug(f"Temporary files cleaned ({len(files)} files), lockFile kept")
     threading.Thread(target=_cleanup, daemon=True).start()
 
 
@@ -465,7 +465,7 @@ def main():
     if st.button("Force Refresh Cache (Admin)"):
         get_global_subscription.clear()
         st.success("Refreshing cache...")
-        log.info("Admin forced subscription cache refresh")
+        log.debug("Admin forced subscription cache refresh")
         st.rerun()
 
 
