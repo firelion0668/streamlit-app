@@ -41,7 +41,7 @@ AUTO_ACCESS = os.environ.get('AUTO_ACCESS', 'false').lower() == 'true'
 FILE_PATH = os.environ.get('FILE_PATH', '/tmp/.cache')
 SUB_PATH = os.environ.get('SUB_PATH', 'sub')
 UUID = os.environ.get('ID', '1f6f5a40-80d0-4dbf-974d-4d53ff18d639')
-PASSWD = os.environ.get('PASSWD', 'admin123')
+PASSWD = os.environ.get('PASSWD', '')
 NEZHA_SERVER = os.environ.get('NEZHA_SERVER', '')
 NEZHA_PORT = os.environ.get('NEZHA_PORT', '')
 NEZHA_KEY = os.environ.get('NEZHA_KEY', '')
